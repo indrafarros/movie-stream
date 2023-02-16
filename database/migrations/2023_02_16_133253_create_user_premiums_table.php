@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('user_premiums', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id')->constrained('packages');
-            $table->foreignId('user')->constrained('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->date('end_of_subscription');
             $table->timestamps();
         });
