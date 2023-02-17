@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Member\LoginController as MemberLoginController;
 use App\Http\Controllers\Member\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::view('/', 'index');
+
+Route::get('login', [MemberLoginController::class, 'index'])->name('member.login');
+Route::post('login', [MemberLoginController::class, 'auth'])->name('member.login.auth');
 
 // Route::middleware('guest')->group(function () {
 Route::get('admin/login', [LoginController::class, 'index'])->name('admin.login');
