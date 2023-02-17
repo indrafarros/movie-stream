@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('admin.dashboard');
 // });
 
-Route::group(['prefix' => 'admin'], function () {
+// Route::middleware('guest')->group(function () {
+// });
+
+Route::get('admin/login', [LoginController::class, 'index'])->name('admin.login');
+
+Route::post('admin/login', [LoginController::class, 'authenticate'])->name('admin.login.auth');
+Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
     Route::view('/', 'admin.dashboard')->name('admin.dashboard');
 
     Route::group(['prefix' => 'movie'], function () {
@@ -31,4 +38,5 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('/destroy/{id}', [MovieController::class, 'destroy'])->name('admin.movie.destroy');
     });
     Route::get('/transaction', [TransactionController::class, 'index'])->name('admin.transaction');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 });
