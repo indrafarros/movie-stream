@@ -23,26 +23,40 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <table id="example2" class="table table-bordered table-hover">
+                            <table id="movies" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
                                         <th>Title</th>
                                         <th>Thumbnail</th>
+                                        <th>Large Thumbnail</th>
                                         <th>Categories</th>
                                         <th>Casts</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    @foreach ($movie as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->title }}</td>
+                                            <td><img src="{{ asset('storage/thumbnail/' . $item->small_thumbnail) }}"
+                                                    width="50%"></td>
+                                            <td><img src="{{ asset('storage/thumbnail/' . $item->large_thumbnail) }}"
+                                                    width="50%"></td>
+                                            <td>{{ $item->categories }}</td>
+                                            <td>{{ $item->casts }}</td>
+                                            <td><a href="{{ route('admin.movie.edit', $item->id) }}"
+                                                    class="btn btn-secondary"><i class="fas fa-edit"></i>Edit</a>
+                                                {{-- <a href="{{ route('') }}" class="btn btn-danger">Delete</a> --}}
+                                                <form action="{{ route('admin.movie.destroy', $item->id) }}" method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -51,4 +65,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $('#movies').DataTable();
+    </script>
 @endsection
