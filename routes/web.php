@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\MovieController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.dashboard');
+// Route::get('/', function () {
+//     return view('admin.dashboard');
+// });
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::view('/', 'admin.dashboard')->name('admin.dashboard');
+
+    Route::group(['prefix' => 'movie'], function () {
+
+        Route::get('/', [MovieController::class, 'index'])->name('admin.movie');
+        Route::get('/create', [MovieController::class, 'create'])->name('admin.movie.create');
+        Route::post('/store', [MovieController::class, 'store'])->name('admin.movie.store');
+    });
 });
