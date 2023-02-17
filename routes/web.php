@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Member\LoginController as MemberLoginController;
+use App\Http\Controllers\Member\MovieController as MemberMovieController;
 use App\Http\Controllers\Member\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,4 +53,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
     });
     Route::get('/transaction', [TransactionController::class, 'index'])->name('admin.transaction');
     Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+});
+
+
+Route::group(['prefix' => 'member', 'middleware' => 'auth'], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('member.dashboard');
+    Route::get('/movie/{id}', [MemberMovieController::class, 'show'])->name('member.movie.detail');
+
+    Route::get('/logout', [MemberLoginController::class, 'logout'])->name('member.logout');
 });
