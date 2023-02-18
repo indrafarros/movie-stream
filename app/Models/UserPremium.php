@@ -15,4 +15,14 @@ class UserPremium extends Model
         'user_id',
         'end_of_subscription'
     ];
+
+    /**
+     * Get the package that owns the UserPremium
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
 }
