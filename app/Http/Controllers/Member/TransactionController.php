@@ -7,7 +7,10 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\OrderShipped;
+use App\Models\Movie;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -49,5 +52,11 @@ class TransactionController extends Controller
         return redirect($midtransRedirect);
 
         // $snapToken = \Midtrans\Snap::getSnapToken($params);
+    }
+
+    public function sendEmail()
+    {
+        $movie = Movie::all();
+        Mail::to('tes@gmail.com')->send(new OrderShipped($movie));
     }
 }
