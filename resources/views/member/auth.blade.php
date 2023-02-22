@@ -79,6 +79,10 @@
                             <button type="submit" class="bg-indigo-600 rounded-full py-3 mt-4 text-center">
                                 <span class="font-semibold text-white text-base">Continue</span>
                             </button>
+                            <a href="{{ route('member.register') }}"
+                                class="bg-gray-600 rounded-full py-3 mt-1 text-center">
+                                <span class="font-semibold text-white text-base">Register</span>
+                            </a>
                         </form>
                     </section>
                 </div>

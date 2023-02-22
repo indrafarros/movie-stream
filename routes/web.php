@@ -1,16 +1,17 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MovieController;
-use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Member\LoginController as MemberLoginController;
-use App\Http\Controllers\Member\MovieController as MemberMovieController;
 use App\Http\Controllers\Member\PricingController;
 use App\Http\Controllers\Member\RegisterController;
-use App\Http\Controllers\Member\TransactionController as MemberTransactionController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Member\UserPremiumController;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\Member\LoginController as MemberLoginController;
+use App\Http\Controllers\Member\MovieController as MemberMovieController;
+use App\Http\Controllers\Member\TransactionController as MemberTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,18 @@ Route::post('admin/login', [LoginController::class, 'authenticate'])->name('admi
 
 Route::get('/register', [RegisterController::class, 'index'])->name('member.register');
 Route::post('/register', [RegisterController::class, 'store'])->name('member.register.store');
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/verify-success');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('/verify-success', function () {
+    return 'Berhasil verifikasi, silahkan login';
+})->middleware(['auth', 'verified']);
 // });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
@@ -59,7 +72,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 });
 
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
-Route::group(['prefix' => 'member', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'member', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('member.dashboard');
     Route::get('/movie/{id}', [MemberMovieController::class, 'show'])->name('member.movie.detail');
     Route::get('/movie/{id}/watch', [MemberMovieController::class, 'watch'])->name('member.movie.watch');
